@@ -23,7 +23,7 @@ input UpdateTaskStatusInput {
 }
 
 type Query {
-  getAllTasks: [TaskType!]!
+  allTasks: [TaskType!]!
 }
 
 type Mutation {

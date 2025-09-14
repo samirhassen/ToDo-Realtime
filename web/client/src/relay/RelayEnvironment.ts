@@ -27,7 +27,7 @@ async function fetchQuery(operation: any, variables: any) {
 }
 
 function subscribeToGraphQLUpdates(operation: any, variables: any) {
-  return Observable.create((sink) => {
+  return Observable.create((sink: any) => {
     const unsubscribe = wsClient.subscribe(
       {
         query: operation.text,

@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLazyLoadQuery, useMutation, useSubscription } from 'react-relay';
 import { 
-  ListView, 
-  Item, 
   Checkbox, 
   Text,
   Flex,
@@ -13,7 +11,7 @@ import { graphql } from 'relay-runtime';
 
 const taskListQuery = graphql`
   query TaskListQuery {
-    getAllTasks {
+    allTasks {
       id
       title
       description
@@ -48,7 +46,7 @@ const taskChangedSubscription = graphql`
 `;
 
 const TaskList: React.FC = () => {
-  const data = useLazyLoadQuery(taskListQuery, {});
+  const data = useLazyLoadQuery(taskListQuery, {}) as any;
   const [commitStatusUpdate] = useMutation(updateTaskStatusMutation);
 
   useSubscription({
@@ -92,18 +90,18 @@ const TaskList: React.FC = () => {
           >
             <Text>{task.title}</Text>
           </Checkbox>
-          <Badge variant={task.status === 'COMPLETED' ? 'positive' : 'notice'}>
+          <Badge variant={task.status === 'COMPLETED' ? 'positive' : 'info'}>
             {task.status === 'COMPLETED' ? 'Completed' : 'Pending'}
           </Badge>
         </Flex>
         
         {task.description && (
-          <Text marginStart="size-300" color="gray-700">
+          <Text marginStart="size-300">
             {task.description}
           </Text>
         )}
         
-        <Text marginStart="size-300" color="gray-600" fontSize="small">
+        <Text marginStart="size-300" fontSize="small">
           Created: {formatDate(task.createdAt)}
           {task.updatedAt !== task.createdAt && (
             <> • Updated: {formatDate(task.updatedAt)}</>
@@ -113,21 +111,21 @@ const TaskList: React.FC = () => {
     </View>
   );
 
-  if (!data.getAllTasks || data.getAllTasks.length === 0) {
+  if (!data.allTasks || data.allTasks.length === 0) {
     return (
-      <View padding="size-400" textAlign="center">
-        <Text color="gray-600">No tasks yet. Add your first task above!</Text>
+      <View padding="size-400">
+        <Text>No tasks yet. Add your first task above!</Text>
       </View>
     );
   }
 
   return (
     <View padding="size-200">
-      <Text elementType="h2" marginBottom="size-200">
-        Tasks ({data.getAllTasks.length})
+      <Text marginBottom="size-200">
+        Tasks ({data.allTasks.length})
       </Text>
       <Flex direction="column" gap="size-100">
-        {data.getAllTasks.map(renderTask)}
+        {data.allTasks.map(renderTask)}
       </Flex>
     </View>
   );
